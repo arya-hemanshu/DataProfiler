@@ -14,7 +14,7 @@ Open ```DataProfiler.ipynb```
 
 - Clone the repo
 ```
-git clone 
+git clone https://github.com/arya-hemanshu/DataProfiler.git
 ```
 - Install dependencies from ```requirements.txt``` by
 ```pip3 install -r requirements.txt```
@@ -31,25 +31,29 @@ git clone
 - By Terminal
 	- Get help by ```python main.py -h```
 	- Get ```correlation``` between variables 
-		```python main.py \
+		```
+			python main.py \
 			-d Datasources/Acc.csv \
 			-n True \
 			-co Days_of_Week -co Number_of_Casualties
 		```
 	- Describe Variables 
-		```python main.py \
+		```
+			python main.py \
 			-d Datasources/Acc.csv \
 			-o describe \
 			-c Number_of_Casualties -c Day_of_Week
 		```
 	- Get Variable types
-		```python main.py \
+		```
+			python main.py \
 			-d Datasources/Acc.csv \
 			-n True \
 			-vt Day_of_Week -vt Number_of_Casualties
 		```
 	- Plot Variables
-		```python main.py \
+		```
+			python main.py \
 			-d Datasources/Acc.csv \
 			-o plot \
 			-c Number_of_Casualties -c Number_of_Vehicles \
@@ -57,7 +61,8 @@ git clone
 			-ot image.png
 		```
 	- Profile Variables
-		```python main.py \
+		```
+			python main.py \
 			-d Datasources/Cas.csv \
 			-o profile
 		```
