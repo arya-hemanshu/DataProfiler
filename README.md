@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/arya-hemanshu/DataProfiler.svg?style=svg)](https://circleci.com/gh/arya-hemanshu/DataProfiler)
+
 ## Data Profiler
 
 There are good data profilers available. Profiling library doesn't aim to build everything from scratch. It tries to built on top of existing tools.
