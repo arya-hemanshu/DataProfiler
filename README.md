@@ -13,6 +13,10 @@ The tool combines pandas.DataFrame and pandas_profiling library into one class a
 - Open ```DataProfiler.ipynb```
 - For full report open ```report.html``` in a browser
 
+#### Documentation
+
+- Go to ```doc/_build/html/index.html```
+
 #### How to set up the tool
 
 - Clone the repo

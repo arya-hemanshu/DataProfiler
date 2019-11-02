@@ -1,7 +1,3 @@
-"""
-The project
-"""
-
 import pandas as pd
 import pandas_profiling as pp
 from pandas_profiling.model.describe import multiprocess_1d as md
@@ -13,11 +9,31 @@ import matplotlib
 
 class Profiling(pd.DataFrame):
 	"""
-	To initialize Profiling class, data or file_path is mandatory
+	There are good data profilers available. Profiling library doesn't aim to build everything 
+	from scratch. It tries to built on top of existing tools.
+
+	The tool is built on top of pandas.DataFrame. Profiling class inherits all the methods of 
+	pandas.DataFrame and add a few of its own to enchance the capability of pandas.DataFrame 
+	bespoke to companies use case.
+
+	The tool combines pandas.DataFrame and pandas_profiling library into one class and makes 
+	direct use of pandas_profiling methods to get information about Variables.
 
 	Args:
 		:data: accepts a pandas dataframe or Profiling object
 		:subset: number of rows to consider when showing report
+		:show_report: Allows users to profile dataset while loading dataset
+		:file_path: Path of csv file to create dataset from
+
+	Profiling object would have access to all pandas.DataFrame variable
+
+	Example:
+
+		.. code-block:: python
+
+			from profiling import Profiling
+			p = Profiling(file_path='Datasources/Acc.csv')
+			p.read_csv()
 
 	"""
 
@@ -34,7 +50,22 @@ class Profiling(pd.DataFrame):
 
 	def __getitem__(self, col):
 		"""
-		This is get item
+		Subscript Profiling object
+
+		Args:
+			:col: list of column name from which new Profiling object is built
+
+		Returns:
+			:Profiling: object
+			:pandas.Series: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				s = p[['Number_of_Casualties', 'Number_of_Vehicles', 'Date']]	
+
 		"""
 
 		if isinstance(col, list):
@@ -45,7 +76,21 @@ class Profiling(pd.DataFrame):
 
 	def read_csv(self):
 		"""
-		This is read_csv
+		Read csv file passed in the Profiling constructor with file_path
+
+		Args:
+			:None:
+
+		Return:
+			:pp.__init__.ProfileReport: Object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
+
 		"""
 
 		if self.file_path is None:
@@ -65,22 +110,69 @@ class Profiling(pd.DataFrame):
 
 	def head(self, rows: int):
 		"""
-		this is head method
+		Return the number of specified rows from top
+
+		Args:
+			:rows: Number of rows to process
+
+		Return:
+			:profiling.Profiling: object
+
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.head(20)
+
+
+
 		"""
 
 		return Profiling(super().head(rows))
 
 	def tail(self, rows: int):
 		"""
-		this is tail
+		Return the number of specified rows from bottom
+
+		Args:
+			:rows: Number of rows to process
+
+		Return:
+			:profiling.Profiling: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.tail(20)
+				
 		"""
 
 		return Profiling(super().tail(rows))
 
 	def psubset(self, cols=[], rows=20):
 		"""
-		This is subset of a data frame
+		Return the number of specified rows and columns
+
+		Args:
+			:cols: List of columns
+			:rows: Number of rows to consider while creating new Profiling object
+
+		Return:
+			:profiling.Profiling: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.psubset(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
+				
 		"""
+
 		df = self
 		if len(cols) != 0:
 			df = self[cols]
@@ -89,7 +181,23 @@ class Profiling(pd.DataFrame):
 
 	def details(self, cols=[], use_pandas=False) -> dict or pd.Series:
 		"""
-		To get the details of a dataframe
+		Return the details of variables, like describe of pandas.DataFrame.describe()
+
+		Args:
+			:cols: List of columns to consider
+			:use_pandas: bool variable indicating use of super class method or child class
+
+		Return:
+			:dict: Dictionary of Variables and its details
+			:pandas.Series: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.details(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
+				
 		"""
 
 		if self.empty:
@@ -103,7 +211,23 @@ class Profiling(pd.DataFrame):
 
 	def compute(self, cols, use_pandas=False) -> dict or pd.Series:
 		"""
-		To compute details about a column in a dataframe
+		Return the details of variables, like describe of pandas.DataFrame.describe()
+
+		Args:
+			:cols: List of columns to consider
+			:use_pandas: bool variable indicating use of super class method or child class
+
+		Return:
+			:dict: Dictionary of Variables and its details
+			:pandas.Series: object
+
+		Example:
+			.. code-block:: python
+			
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.details(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
+	
 		"""
 
 		if use_pandas:
@@ -141,7 +265,26 @@ class Profiling(pd.DataFrame):
 
 	def plot_timeseries(self, date_col: str, cols=[], plot_on='date', figsize=(10,5), kind='line') -> None or matplotlib.axes._subplots:
 		"""
-		To plot time series data
+		Plot the dataset as timeseries
+
+		Args:
+			:date_col: Name of the column to consider as datetime
+			:cols: default '[]' List of columns to consider
+			:plot_on: default 'date' Ploting xaxis based on date, month or year
+			:fig_size: default '(10, 5)' size of graph to save or print
+			:kind: default 'line' Type of graph
+
+
+		Return:
+			:matplotlib.axes._subplots.AxesSubplot: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.plot_timeseries('Date', ['Number_of_Casualties', 'Number_of_Vehicles'], plot_on='month', kind='bar')
+	
 		"""
 
 		if len(cols) == 0:
@@ -165,7 +308,23 @@ class Profiling(pd.DataFrame):
 
 	def to_datetime(self, col: str):
 		"""
-		to convert column into datetime
+		Convert column to datetime object, on inplace Profiling object
+
+		Args:
+			:col: Name of the column to consider
+
+		Return:
+			:None: Changes the object inplace
+
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.to_datetime('Date')
+
+				
 		"""
 
 		try:
@@ -175,7 +334,25 @@ class Profiling(pd.DataFrame):
 
 	def plot(self, x: str, y: list, kind='line', figsize=(10, 5)) -> matplotlib.axes._subplots:
 		"""
-		Overriden plot method of dataframe from pandas
+		Plot dataset based on columns passed
+
+		Args:
+			:x: xaxis variable to consider
+			:y: List of variable to consider for y axis
+			:kind: default 'line' Type of graph
+			:figsize: default '(10, 5)' size of graph to save or print
+
+		Return:
+			:matplotlib.axes._subplots.AxesSubplot: object
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.plot(x='Day_of_Week', y=['Number_of_Casualties', 'Number_of_Vehicles'])
+
+				
 		"""
 
 		s_d = self.v_type(self[[x]])
@@ -187,7 +364,25 @@ class Profiling(pd.DataFrame):
 
 	def v_type(self, df) -> dict:
 		"""
-		Finding the variable type
+		Provides the type variables in the dataframe
+
+		Args:
+			:df: pandas.DataFrame or profiling.Profiling
+
+		Return:
+			:dict: Variable names along its data types
+
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				d = p.v_type(p.psubset(['Number_of_Casualties', 'Light_Conditions', 'Did_Police_Officer_Attend_Scene_of_Accident']))
+				for k, v in d.items():
+				    print(k, '\t', v['type'].value)
+
+				
 		"""
 
 		a = [(c, s) for c, s in df.iteritems()]
@@ -196,7 +391,28 @@ class Profiling(pd.DataFrame):
 
 	def profile(self, subset=0, cols=[], title='Report', pool_size=0, minify_html=False, output=None):
 		"""
-		Priting the profile of a dataframe
+		Create report of the dataframe
+
+		Args:
+			:subset: default '0', Number of rows to consider while creating profile
+			:cols:	default '[]' List of columns to consider while creating profile
+			:title: default 'Report' Name of the report
+			:pool_size: default '0' Number of cores to use
+			:minify_html: default 'False' Whether to minify html or not
+			:output: default 'None' Path of the output file
+
+		Return:
+			:pp.__init__.ProfileReport: object
+
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.profile(cols=['Number_of_Casualties'])
+
+				
 		"""
 
 		df = self
@@ -217,7 +433,24 @@ class Profiling(pd.DataFrame):
 
 	def correlation(self, subset=[], method='pearson'):
 		"""
-		Finding correlation between variables
+		Provides correlation between of passed variables
+
+		Args:
+			:subset: List of columns to consider while finding correlations
+			:method: correlation method to consider, default 'pearson'
+
+
+		Return:
+			:profiling.Profiling: object
+
+
+		Example:
+			.. code-block:: python
+
+				from profiling import Profiling
+				p = Profiling(file_path='Datasources/Acc.csv')
+				p.correlation(subset=['Number_of_Casualties', 'Number_of_Vehicles', 'Light_Conditions'])
+
 		"""
 
 		if len(subset) == 0:

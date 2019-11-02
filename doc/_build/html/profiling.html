@@ -36,7 +36,13 @@
 <dl class="class">
 <dt id="profiling.Profiling">
 <em class="property">class </em><code class="sig-prename descclassname">profiling.</code><code class="sig-name descname">Profiling</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">subset=20</em>, <em class="sig-param">show_report=False</em>, <em class="sig-param">file_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling" title="Permalink to this definition">¶</a></dt>
-<dd><p>To initialize Profiling class, data or file_path is mandatory</p>
+<dd><p>There are good data profilers available. Profiling library doesn’t aim to build everything 
+from scratch. It tries to built on top of existing tools.</p>
+<p>The tool is built on top of pandas.DataFrame. Profiling class inherits all the methods of 
+pandas.DataFrame and add a few of its own to enchance the capability of pandas.DataFrame 
+bespoke to companies use case.</p>
+<p>The tool combines pandas.DataFrame and pandas_profiling library into one class and makes 
+direct use of pandas_profiling methods to get information about Variables.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data</dt>
@@ -45,79 +51,389 @@
 <dt class="field-even">subset</dt>
 <dd class="field-even"><p>number of rows to consider when showing report</p>
 </dd>
+<dt class="field-odd">show_report</dt>
+<dd class="field-odd"><p>Allows users to profile dataset while loading dataset</p>
+</dd>
+<dt class="field-even">file_path</dt>
+<dd class="field-even"><p>Path of csv file to create dataset from</p>
+</dd>
 </dl>
 </dd>
 </dl>
+<p>Profiling object would have access to all pandas.DataFrame variable</p>
+<p>Example:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">read_csv</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
 <dl class="method">
 <dt id="profiling.Profiling.compute">
 <code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">cols</em>, <em class="sig-param">use_pandas=False</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>To compute details about a column in a dataframe</p>
+<dd><p>Return the details of variables, like describe of pandas.DataFrame.describe()</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cols</dt>
+<dd class="field-odd"><p>List of columns to consider</p>
+</dd>
+<dt class="field-even">use_pandas</dt>
+<dd class="field-even"><p>bool variable indicating use of super class method or child class</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dict</dt>
+<dd class="field-odd"><p>Dictionary of Variables and its details</p>
+</dd>
+<dt class="field-even">pandas.Series</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">details</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.correlation">
 <code class="sig-name descname">correlation</code><span class="sig-paren">(</span><em class="sig-param">subset=[]</em>, <em class="sig-param">method='pearson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.correlation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finding correlation between variables</p>
+<dd><p>Provides correlation between of passed variables</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">subset</dt>
+<dd class="field-odd"><p>List of columns to consider while finding correlations</p>
+</dd>
+<dt class="field-even">method</dt>
+<dd class="field-even"><p>correlation method to consider, default ‘pearson’</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">profiling.Profiling</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">correlation</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">,</span> <span class="s1">&#39;Light_Conditions&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.details">
 <code class="sig-name descname">details</code><span class="sig-paren">(</span><em class="sig-param">cols=[]</em>, <em class="sig-param">use_pandas=False</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.details" title="Permalink to this definition">¶</a></dt>
-<dd><p>To get the details of a dataframe</p>
+<dd><p>Return the details of variables, like describe of pandas.DataFrame.describe()</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cols</dt>
+<dd class="field-odd"><p>List of columns to consider</p>
+</dd>
+<dt class="field-even">use_pandas</dt>
+<dd class="field-even"><p>bool variable indicating use of super class method or child class</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dict</dt>
+<dd class="field-odd"><p>Dictionary of Variables and its details</p>
+</dd>
+<dt class="field-even">pandas.Series</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">details</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.head">
 <code class="sig-name descname">head</code><span class="sig-paren">(</span><em class="sig-param">rows: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.head"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.head" title="Permalink to this definition">¶</a></dt>
-<dd><p>this is head method</p>
+<dd><p>Return the number of specified rows from top</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">rows</dt>
+<dd class="field-odd"><p>Number of rows to process</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">profiling.Profiling</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.plot">
 <code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">x: str</em>, <em class="sig-param">y: list</em>, <em class="sig-param">kind='line'</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">5)</em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._subplots<a class="reference internal" href="_modules/profiling.html#Profiling.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overriden plot method of dataframe from pandas</p>
+<dd><p>Plot dataset based on columns passed</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">x</dt>
+<dd class="field-odd"><p>xaxis variable to consider</p>
+</dd>
+<dt class="field-even">y</dt>
+<dd class="field-even"><p>List of variable to consider for y axis</p>
+</dd>
+<dt class="field-odd">kind</dt>
+<dd class="field-odd"><p>default ‘line’ Type of graph</p>
+</dd>
+<dt class="field-even">figsize</dt>
+<dd class="field-even"><p>default ‘(10, 5)’ size of graph to save or print</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">matplotlib.axes._subplots.AxesSubplot</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Day_of_Week&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.plot_timeseries">
 <code class="sig-name descname">plot_timeseries</code><span class="sig-paren">(</span><em class="sig-param">date_col: str</em>, <em class="sig-param">cols=[]</em>, <em class="sig-param">plot_on='date'</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">5)</em>, <em class="sig-param">kind='line'</em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._subplots<a class="reference internal" href="_modules/profiling.html#Profiling.plot_timeseries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.plot_timeseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>To plot time series data</p>
+<dd><p>Plot the dataset as timeseries</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">date_col</dt>
+<dd class="field-odd"><p>Name of the column to consider as datetime</p>
+</dd>
+<dt class="field-even">cols</dt>
+<dd class="field-even"><p>default ‘[]’ List of columns to consider</p>
+</dd>
+<dt class="field-odd">plot_on</dt>
+<dd class="field-odd"><p>default ‘date’ Ploting xaxis based on date, month or year</p>
+</dd>
+<dt class="field-even">fig_size</dt>
+<dd class="field-even"><p>default ‘(10, 5)’ size of graph to save or print</p>
+</dd>
+<dt class="field-odd">kind</dt>
+<dd class="field-odd"><p>default ‘line’ Type of graph</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">matplotlib.axes._subplots.AxesSubplot</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">plot_timeseries</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">],</span> <span class="n">plot_on</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.profile">
 <code class="sig-name descname">profile</code><span class="sig-paren">(</span><em class="sig-param">subset=0</em>, <em class="sig-param">cols=[]</em>, <em class="sig-param">title='Report'</em>, <em class="sig-param">pool_size=0</em>, <em class="sig-param">minify_html=False</em>, <em class="sig-param">output=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Priting the profile of a dataframe</p>
+<dd><p>Create report of the dataframe</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">subset</dt>
+<dd class="field-odd"><p>default ‘0’, Number of rows to consider while creating profile</p>
+</dd>
+<dt class="field-even">cols</dt>
+<dd class="field-even"><p>default ‘[]’ List of columns to consider while creating profile</p>
+</dd>
+<dt class="field-odd">title</dt>
+<dd class="field-odd"><p>default ‘Report’ Name of the report</p>
+</dd>
+<dt class="field-even">pool_size</dt>
+<dd class="field-even"><p>default ‘0’ Number of cores to use</p>
+</dd>
+<dt class="field-odd">minify_html</dt>
+<dd class="field-odd"><p>default ‘False’ Whether to minify html or not</p>
+</dd>
+<dt class="field-even">output</dt>
+<dd class="field-even"><p>default ‘None’ Path of the output file</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">pp.__init__.ProfileReport</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.psubset">
 <code class="sig-name descname">psubset</code><span class="sig-paren">(</span><em class="sig-param">cols=[]</em>, <em class="sig-param">rows=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.psubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.psubset" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is subset of a data frame</p>
+<dd><p>Return the number of specified rows and columns</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cols</dt>
+<dd class="field-odd"><p>List of columns</p>
+</dd>
+<dt class="field-even">rows</dt>
+<dd class="field-even"><p>Number of rows to consider while creating new Profiling object</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">profiling.Profiling</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">psubset</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Number_of_Vehicles&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.read_csv">
 <code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.read_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is read_csv</p>
+<dd><p>Read csv file passed in the Profiling constructor with file_path</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">None</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">pp.__init__.ProfileReport</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">read_csv</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.tail">
 <code class="sig-name descname">tail</code><span class="sig-paren">(</span><em class="sig-param">rows: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.tail" title="Permalink to this definition">¶</a></dt>
-<dd><p>this is tail</p>
+<dd><p>Return the number of specified rows from bottom</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">rows</dt>
+<dd class="field-odd"><p>Number of rows to process</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">profiling.Profiling</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.to_datetime">
 <code class="sig-name descname">to_datetime</code><span class="sig-paren">(</span><em class="sig-param">col: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.to_datetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>to convert column into datetime</p>
+<dd><p>Convert column to datetime object, on inplace Profiling object</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">col</dt>
+<dd class="field-odd"><p>Name of the column to consider</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">None</dt>
+<dd class="field-odd"><p>Changes the object inplace</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="profiling.Profiling.v_type">
 <code class="sig-name descname">v_type</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.v_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.v_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finding the variable type</p>
+<dd><p>Provides the type variables in the dataframe</p>
+<dl>
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">df</dt>
+<dd class="field-odd"><p>pandas.DataFrame or profiling.Profiling</p>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dict</dt>
+<dd class="field-odd"><p>Variable names along its data types</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="kn">import</span> <span class="n">Profiling</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s1">&#39;Datasources/Acc.csv&#39;</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">v_type</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">psubset</span><span class="p">([</span><span class="s1">&#39;Number_of_Casualties&#39;</span><span class="p">,</span> <span class="s1">&#39;Light_Conditions&#39;</span><span class="p">,</span> <span class="s1">&#39;Did_Police_Officer_Attend_Scene_of_Accident&#39;</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -128,7 +444,176 @@
 <dl class="function">
 <dt id="main.arguments">
 <code class="sig-prename descclassname">main.</code><code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">arg: list = []</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of options that could be passed through console</p>
+<dd><p>Running the main.py with options would help understand data directly from Terminal
+List of options that could be passed through console</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">–dataset, -d</dt>
+<dd class="field-odd"><p>Path for the dataset</p>
+</dd>
+<dt class="field-even">–columns, -c</dt>
+<dd class="field-even"><p>List of columns to consider while creating dataset</p>
+</dd>
+<dt class="field-odd">–rows, -r</dt>
+<dd class="field-odd"><p>Number of rows to consider from dataset</p>
+</dd>
+<dt class="field-even">–operation, -o</dt>
+<dd class="field-even"><p>Accepts 4 values (describe, plot, profile, corr)</p>
+</dd>
+<dt class="field-odd">–no, -n</dt>
+<dd class="field-odd"><p>Will not take any operation into consideration, helpful when querying for variables</p>
+</dd>
+<dt class="field-even">–timeseries, -t</dt>
+<dd class="field-even"><p>Will consider operation as a timeseries operation</p>
+</dd>
+<dt class="field-odd">–ploton, -po</dt>
+<dd class="field-odd"><p>For timeseries data will plot based on date, month or year</p>
+</dd>
+<dt class="field-even">–xaxis, -x</dt>
+<dd class="field-even"><p>Column name for x axis required for plotting</p>
+</dd>
+<dt class="field-odd">–output, -ot</dt>
+<dd class="field-odd"><p>File name to save profile data as html and plot as image</p>
+</dd>
+<dt class="field-even">–vtype, -vt</dt>
+<dd class="field-even"><p>To find the variable of type accepted as list</p>
+</dd>
+<dt class="field-odd">–corr, -co</dt>
+<dd class="field-odd"><p>To find correlation between variables</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Examples:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python main.py 
+-d Datasources/Acc.csv 
+-n True 
+-co Days_of_Week -co Number_of_Casualties
+
+
+python main.py 
+-d Datasources/Acc.csv 
+-o describe 
+-c Number_of_Casualties -c Day_of_Week
+
+python main.py 
+-d Datasources/Acc.csv 
+-n True 
+-vt Day_of_Week -vt Number_of_Casualties
+
+python main.py 
+-d Datasources/Acc.csv 
+-o plot 
+-c Number_of_Casualties -c Number_of_Vehicles 
+-x Day_of_week 
+-ot image.png
+
+python main.py 
+-d Datasources/Cas.csv 
+-o profile
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">argparse.Namespace</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="main.corr">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">corr</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls correlation from profiling.Profiling</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">ar</dt>
+<dd class="field-odd"><p>Command-line arguments</p>
+</dd>
+<dt class="field-even">profile</dt>
+<dd class="field-even"><p>profiling.Profiling object</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">profiling.Profiling</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="main.describe">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">describe</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls details from profiling.Profiling</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">ar</dt>
+<dd class="field-odd"><p>Command-line arguments</p>
+</dd>
+<dt class="field-even">profile</dt>
+<dd class="field-even"><p>profiling.Profiling object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="main.plot">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls plot_timeseries or plot from profiling.Profiling</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">ar</dt>
+<dd class="field-odd"><p>Command-line arguments</p>
+</dd>
+<dt class="field-even">profile</dt>
+<dd class="field-even"><p>profiling.Profiling object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="main.profile_data">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">profile_data</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#profile_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.profile_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls profile from profiling.Profiling</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">ar</dt>
+<dd class="field-odd"><p>Command-line arguments</p>
+</dd>
+<dt class="field-even">profile</dt>
+<dd class="field-even"><p>profiling.Profiling object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="main.variable_type">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">variable_type</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#variable_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.variable_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls v_type from profiling.Profiling</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">ar</dt>
+<dd class="field-odd"><p>Command-line arguments</p>
+</dd>
+<dt class="field-even">profile</dt>
+<dd class="field-even"><p>profiling.Profiling object</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

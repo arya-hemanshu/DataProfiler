@@ -6,7 +6,57 @@ import os
 
 def arguments(arg: list = []):
 	"""
+	Running the main.py with options would help understand data directly from Terminal
 	List of options that could be passed through console
+
+	Args:
+		:--dataset, -d: Path for the dataset
+		:--columns, -c: List of columns to consider while creating dataset
+		:--rows, -r: Number of rows to consider from dataset
+		:--operation, -o: Accepts 4 values (describe, plot, profile, corr)
+		:--no, -n: Will not take any operation into consideration, helpful when querying for variables
+		:--timeseries, -t: Will consider operation as a timeseries operation
+		:--ploton, -po: For timeseries data will plot based on date, month or year
+		:--xaxis, -x: Column name for x axis required for plotting
+		:--output, -ot: File name to save profile data as html and plot as image
+		:--vtype, -vt: To find the variable of type accepted as list
+		:--corr, -co: To find correlation between variables
+
+	Examples:
+
+		.. code-block:: shell
+
+			python main.py 
+			-d Datasources/Acc.csv 
+			-n True 
+			-co Days_of_Week -co Number_of_Casualties
+		
+
+			python main.py 
+			-d Datasources/Acc.csv 
+			-o describe 
+			-c Number_of_Casualties -c Day_of_Week
+
+			python main.py 
+			-d Datasources/Acc.csv 
+			-n True 
+			-vt Day_of_Week -vt Number_of_Casualties
+
+			python main.py 
+			-d Datasources/Acc.csv 
+			-o plot 
+			-c Number_of_Casualties -c Number_of_Vehicles 
+			-x Day_of_week 
+			-ot image.png
+
+			python main.py 
+			-d Datasources/Cas.csv 
+			-o profile
+
+	Returns:
+		:argparse.Namespace: object
+
+
 	"""
 
 	parser = argparse.ArgumentParser(description='Bespoke profiler')
@@ -89,6 +139,15 @@ def arguments(arg: list = []):
 	return parser.parse_args(arg)
 
 def plot(ar, profile):
+	"""
+	Calls plot_timeseries or plot from profiling.Profiling
+
+	Args:
+		:ar: Command-line arguments
+		:profile: profiling.Profiling object
+
+	"""
+
 	if ar.columns is None or ar.xaxis is None:
 		print('For plotting columns and x axis col name is required')
 		sys.exit()
@@ -107,6 +166,15 @@ def plot(ar, profile):
 		print('Please visit', ar.output, 'to open image')
 
 def profile_data(ar, profile):
+	"""
+	Calls profile from profiling.Profiling
+
+	Args:
+		:ar: Command-line arguments
+		:profile: profiling.Profiling object
+		
+	"""
+
 	cols = ar.columns
 	rows = ar.rows
 	if cols is not None and rows is not None:
@@ -120,6 +188,15 @@ def profile_data(ar, profile):
 		profile.profile(output=ar.output)
 
 def describe(ar, profile):
+	"""
+	Calls details from profiling.Profiling
+
+	Args:
+		:ar: Command-line arguments
+		:profile: profiling.Profiling object
+		
+	"""
+
 	cl = []
 	if ar.columns is not None:
 		cl = ar.columns
@@ -127,6 +204,15 @@ def describe(ar, profile):
 	profile.details(cols=cl)
 
 def variable_type(ar, profile):
+	"""
+	Calls v_type from profiling.Profiling
+
+	Args:
+		:ar: Command-line arguments
+		:profile: profiling.Profiling object
+		
+	"""
+
 	df = profile.psubset(cols=ar.vtype, rows=profile.shape[0])
 	vt = df.v_type(df)
 
@@ -134,10 +220,23 @@ def variable_type(ar, profile):
 		print(k, '\t', (vt[k]['type']).value)
 
 def corr(ar, profile):
+	"""
+	Calls correlation from profiling.Profiling
+
+	Args:
+		:ar: Command-line arguments
+		:profile: profiling.Profiling object
+
+	Returns:
+		:profiling.Profiling: object
+		
+	"""
+
 	return profile.correlation(subset=ar.corr)
 	
 
 if __name__ == '__main__':
+
 	args = sys.argv
 	if len(args) <= 1:
 		print('--dataset argument is mandatory')

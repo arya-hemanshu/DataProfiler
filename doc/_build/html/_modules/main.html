@@ -39,7 +39,57 @@
 
 <div class="viewcode-block" id="arguments"><a class="viewcode-back" href="../profiling.html#main.arguments">[docs]</a><span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Running the main.py with options would help understand data directly from Terminal</span>
 <span class="sd">	List of options that could be passed through console</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:--dataset, -d: Path for the dataset</span>
+<span class="sd">		:--columns, -c: List of columns to consider while creating dataset</span>
+<span class="sd">		:--rows, -r: Number of rows to consider from dataset</span>
+<span class="sd">		:--operation, -o: Accepts 4 values (describe, plot, profile, corr)</span>
+<span class="sd">		:--no, -n: Will not take any operation into consideration, helpful when querying for variables</span>
+<span class="sd">		:--timeseries, -t: Will consider operation as a timeseries operation</span>
+<span class="sd">		:--ploton, -po: For timeseries data will plot based on date, month or year</span>
+<span class="sd">		:--xaxis, -x: Column name for x axis required for plotting</span>
+<span class="sd">		:--output, -ot: File name to save profile data as html and plot as image</span>
+<span class="sd">		:--vtype, -vt: To find the variable of type accepted as list</span>
+<span class="sd">		:--corr, -co: To find correlation between variables</span>
+
+<span class="sd">	Examples:</span>
+
+<span class="sd">		.. code-block:: shell</span>
+
+<span class="sd">			python main.py </span>
+<span class="sd">			-d Datasources/Acc.csv </span>
+<span class="sd">			-n True </span>
+<span class="sd">			-co Days_of_Week -co Number_of_Casualties</span>
+<span class="sd">		</span>
+
+<span class="sd">			python main.py </span>
+<span class="sd">			-d Datasources/Acc.csv </span>
+<span class="sd">			-o describe </span>
+<span class="sd">			-c Number_of_Casualties -c Day_of_Week</span>
+
+<span class="sd">			python main.py </span>
+<span class="sd">			-d Datasources/Acc.csv </span>
+<span class="sd">			-n True </span>
+<span class="sd">			-vt Day_of_Week -vt Number_of_Casualties</span>
+
+<span class="sd">			python main.py </span>
+<span class="sd">			-d Datasources/Acc.csv </span>
+<span class="sd">			-o plot </span>
+<span class="sd">			-c Number_of_Casualties -c Number_of_Vehicles </span>
+<span class="sd">			-x Day_of_week </span>
+<span class="sd">			-ot image.png</span>
+
+<span class="sd">			python main.py </span>
+<span class="sd">			-d Datasources/Cas.csv </span>
+<span class="sd">			-o profile</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		:argparse.Namespace: object</span>
+
+
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Bespoke profiler&#39;</span><span class="p">)</span>
@@ -121,7 +171,16 @@
 
 	<span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../profiling.html#main.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calls plot_timeseries or plot from profiling.Profiling</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:ar: Command-line arguments</span>
+<span class="sd">		:profile: profiling.Profiling object</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
 	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ar</span><span class="o">.</span><span class="n">xaxis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;For plotting columns and x axis col name is required&#39;</span><span class="p">)</span>
 		<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
@@ -137,9 +196,18 @@
 	<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
 		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;open &#39;</span> <span class="o">+</span> <span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please visit&#39;</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;to open image&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please visit&#39;</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;to open image&#39;</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">profile_data</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+<div class="viewcode-block" id="profile_data"><a class="viewcode-back" href="../profiling.html#main.profile_data">[docs]</a><span class="k">def</span> <span class="nf">profile_data</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calls profile from profiling.Profiling</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:ar: Command-line arguments</span>
+<span class="sd">		:profile: profiling.Profiling object</span>
+<span class="sd">		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
 	<span class="n">cols</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span>
 	<span class="n">rows</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">rows</span>
 	<span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -150,27 +218,58 @@
 		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;It may take longer to profile on whole dataset&#39;</span><span class="p">)</span>
-		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+<div class="viewcode-block" id="describe"><a class="viewcode-back" href="../profiling.html#main.describe">[docs]</a><span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calls details from profiling.Profiling</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:ar: Command-line arguments</span>
+<span class="sd">		:profile: profiling.Profiling object</span>
+<span class="sd">		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
 	<span class="n">cl</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="n">cl</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span>
 	
-	<span class="n">profile</span><span class="o">.</span><span class="n">details</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cl</span><span class="p">)</span>
+	<span class="n">profile</span><span class="o">.</span><span class="n">details</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cl</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">variable_type</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+<div class="viewcode-block" id="variable_type"><a class="viewcode-back" href="../profiling.html#main.variable_type">[docs]</a><span class="k">def</span> <span class="nf">variable_type</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calls v_type from profiling.Profiling</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:ar: Command-line arguments</span>
+<span class="sd">		:profile: profiling.Profiling object</span>
+<span class="sd">		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
 	<span class="n">df</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">psubset</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">vtype</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 	<span class="n">vt</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">v_type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
 	<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vt</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-		<span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">vt</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">vt</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">corr</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
-	<span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">correlation</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">corr</span><span class="p">)</span>
+<div class="viewcode-block" id="corr"><a class="viewcode-back" href="../profiling.html#main.corr">[docs]</a><span class="k">def</span> <span class="nf">corr</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calls correlation from profiling.Profiling</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		:ar: Command-line arguments</span>
+<span class="sd">		:profile: profiling.Profiling object</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		:profiling.Profiling: object</span>
+<span class="sd">		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">correlation</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">corr</span><span class="p">)</span></div>
 	
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
 	<span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
 	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--dataset argument is mandatory&#39;</span><span class="p">)</span>
