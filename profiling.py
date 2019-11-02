@@ -64,6 +64,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				s = p[['Number_of_Casualties', 'Number_of_Vehicles', 'Date']]	
 
 		"""
@@ -124,6 +125,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.head(20)
 
 
@@ -147,6 +149,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.tail(20)
 				
 		"""
@@ -169,6 +172,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.psubset(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
 				
 		"""
@@ -196,6 +200,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.details(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
 				
 		"""
@@ -226,6 +231,7 @@ class Profiling(pd.DataFrame):
 			
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.details(cols=['Number_of_Casualties', 'Number_of_Vehicles']))
 	
 		"""
@@ -283,6 +289,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.plot_timeseries('Date', ['Number_of_Casualties', 'Number_of_Vehicles'], plot_on='month', kind='bar')
 	
 		"""
@@ -322,6 +329,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.to_datetime('Date')
 
 				
@@ -350,6 +358,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.plot(x='Day_of_Week', y=['Number_of_Casualties', 'Number_of_Vehicles'])
 
 				
@@ -378,6 +387,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				d = p.v_type(p.psubset(['Number_of_Casualties', 'Light_Conditions', 'Did_Police_Officer_Attend_Scene_of_Accident']))
 				for k, v in d.items():
 				    print(k, '\t', v['type'].value)
@@ -410,6 +420,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.profile(cols=['Number_of_Casualties'])
 
 				
@@ -449,6 +460,7 @@ class Profiling(pd.DataFrame):
 
 				from profiling import Profiling
 				p = Profiling(file_path='Datasources/Acc.csv')
+				p.read_csv()
 				p.correlation(subset=['Number_of_Casualties', 'Number_of_Vehicles', 'Light_Conditions'])
 
 		"""

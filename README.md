@@ -11,7 +11,13 @@ The tool combines pandas.DataFrame and pandas_profiling library into one class a
 #### Demo
 
 - Open ```DataProfiler.ipynb```
-- For full report open ```report.html``` in a browser
+- For full report open ```report.html``` in a browser. ```profiling.Profiling.profile()```  would generate a report like this. To re-create
+	```
+		from profiling import Profiling
+		p = Profiling(file_path='Datasources/Cas.csv')
+		p.read_csv()
+		p.profile()
+	```
 - Profiling class ```profiling.py```
 
 #### Documentation
