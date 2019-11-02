@@ -8,7 +8,8 @@ The tool combines pandas.DataFrame and pandas_profiling library into one class a
 
 #### Demo
 
-Open ```DataProfiler.ipynb```
+- Open ```DataProfiler.ipynb```
+- For full report open ```report.html```
 
 #### How to set up the tool
 
