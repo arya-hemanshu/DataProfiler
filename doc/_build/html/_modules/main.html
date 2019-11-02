@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>main &#8212; DataProfiler 0.01 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for main</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">profiling</span> <span class="k">import</span> <span class="n">Profiling</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="arguments"><a class="viewcode-back" href="../profiling.html#main.arguments">[docs]</a><span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	List of options that could be passed through console</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Bespoke profiler&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--dataset&#39;</span><span class="p">,</span> 
+			<span class="s1">&#39;-d&#39;</span><span class="p">,</span> 
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s2">&quot;Provide the dataset file path&quot;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--columns&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-c&#39;</span><span class="p">,</span>
+			<span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide column name from dataset&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--rows&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-r&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide number of rows to consider from dataset&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--operation&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-o&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">default</span><span class="o">=</span><span class="s1">&#39;profile&#39;</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Options allowed (describe, plot, profile, corr)&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--no&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-n&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+			<span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide in case you dont want any operation to run&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--timeseries&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-t&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+			<span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Adding the flag will treat the x axis as timeseries&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--ploton&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-po&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">default</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Options allowed (date, month, year)&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--xaxis&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-x&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide column name for x axis&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--output&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-ot&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">default</span><span class="o">=</span><span class="s1">&#39;report.html&#39;</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide the filename of output file&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--vtype&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-vt&#39;</span><span class="p">,</span>
+			<span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pass variable for which type needs to be determined&#39;</span><span class="p">)</span>
+
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+			<span class="s1">&#39;--corr&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;-co&#39;</span><span class="p">,</span>
+			<span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+			<span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide list of variables for which correlation matrix is required&#39;</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ar</span><span class="o">.</span><span class="n">xaxis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;For plotting columns and x axis col name is required&#39;</span><span class="p">)</span>
+		<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+	<span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">timeseries</span><span class="p">:</span>
+		<span class="n">fig</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">plot_timeseries</span><span class="p">(</span><span class="n">ar</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">ploton</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">fig</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ar</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+	<span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">get_figure</span><span class="p">())</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;open &#39;</span> <span class="o">+</span> <span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please visit&#39;</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;to open image&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">profile_data</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="n">cols</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span>
+	<span class="n">rows</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">rows</span>
+	<span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;It may take longer to profile on whole dataset&#39;</span><span class="p">)</span>
+		<span class="n">profile</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="n">cl</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">cl</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">columns</span>
+	
+	<span class="n">profile</span><span class="o">.</span><span class="n">details</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cl</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">variable_type</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">psubset</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">vtype</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+	<span class="n">vt</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">v_type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vt</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">vt</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">corr</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+	<span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">correlation</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">corr</span><span class="p">)</span>
+	
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--dataset argument is mandatory&#39;</span><span class="p">)</span>
+		<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+	<span class="n">ar</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+	<span class="n">profile</span> <span class="o">=</span> <span class="n">Profiling</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">ar</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+	<span class="n">profile</span><span class="o">.</span><span class="n">read_csv</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">ar</span><span class="o">.</span><span class="n">no</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;plot&#39;</span><span class="p">:</span>
+			<span class="n">plot</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+
+		<span class="k">elif</span> <span class="n">ar</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;profile&#39;</span><span class="p">:</span>
+			<span class="n">profile_data</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+
+		<span class="k">elif</span> <span class="n">ar</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
+			<span class="n">describe</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+
+		<span class="k">else</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid operation selected&#39;</span><span class="p">)</span>
+			<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">vtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">variable_type</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">ar</span><span class="o">.</span><span class="n">corr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">corr</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">DataProfiler</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../profiling.html">Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../profiling.html#module-main">Main</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Hemanshu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

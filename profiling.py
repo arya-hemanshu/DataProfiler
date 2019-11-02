@@ -1,3 +1,7 @@
+"""
+The project
+"""
+
 import pandas as pd
 import pandas_profiling as pp
 from pandas_profiling.model.describe import multiprocess_1d as md
@@ -7,13 +11,18 @@ import sys
 import itertools
 import matplotlib
 
-# Combined data frame and read_csv into a single class
-# Adding datatype checks before doing the calculations
-# Improved memory management
-
 class Profiling(pd.DataFrame):
+	"""
+	To initialize Profiling class, data or file_path is mandatory
+
+	Args:
+		:data: accepts a pandas dataframe or Profiling object
+		:subset: number of rows to consider when showing report
+
+	"""
 
 	def __init__(self, data=None, subset=20, show_report=False, file_path=None):
+
 		if data is None and file_path is None:
 			raise ValueError('File path or data is required')
 
@@ -24,13 +33,20 @@ class Profiling(pd.DataFrame):
 		self.show_report = show_report
 
 	def __getitem__(self, col):
+		"""
+		This is get item
+		"""
+
 		if isinstance(col, list):
 			return Profiling(super().__getitem__(col))
 		else:
 			return super().__getitem__(col)
 
 
-	def read_csv(self) -> None or pp.__init__.ProfileReport:
+	def read_csv(self):
+		"""
+		This is read_csv
+		"""
 
 		if self.file_path is None:
 			print('File path is required')
@@ -42,25 +58,39 @@ class Profiling(pd.DataFrame):
 			self.__init__(pd.read_csv(self.file_path, low_memory=False), self.subset, self.show_report, self.file_path)
 			if self.show_report:
 				return self.profile(subset=self.subset)
+
 		else:
 			print(self.file_path, "doesn't exists")
 			return
 
 	def head(self, rows: int):
+		"""
+		this is head method
+		"""
+
 		return Profiling(super().head(rows))
 
 	def tail(self, rows: int):
+		"""
+		this is tail
+		"""
+
 		return Profiling(super().tail(rows))
 
 	def psubset(self, cols=[], rows=20):
+		"""
+		This is subset of a data frame
+		"""
 		df = self
 		if len(cols) != 0:
 			df = self[cols]
 
 		return df.head(rows)
 
-	# Type checking before sending details
 	def details(self, cols=[], use_pandas=False) -> dict or pd.Series:
+		"""
+		To get the details of a dataframe
+		"""
 
 		if self.empty:
 			print('Data frame is required')
@@ -72,6 +102,10 @@ class Profiling(pd.DataFrame):
 		return self.compute(cols, use_pandas)
 
 	def compute(self, cols, use_pandas=False) -> dict or pd.Series:
+		"""
+		To compute details about a column in a dataframe
+		"""
+
 		if use_pandas:
 			print('Use pandas would not check for types')
 			return self[cols].describe()
@@ -105,10 +139,10 @@ class Profiling(pd.DataFrame):
 				print('Unknown datatype of column', col)
 		return describe
 
-	# convert the date column to a format that pandas accept, currently it user who needs to process it
-	# pd.to_datetime when passed with any column tries to convert it into date, even if they are latitude or longitude
-	# currently only supports one more could be introduced to format different kind of datasets
 	def plot_timeseries(self, date_col: str, cols=[], plot_on='date', figsize=(10,5), kind='line') -> None or matplotlib.axes._subplots:
+		"""
+		To plot time series data
+		"""
 
 		if len(cols) == 0:
 			print('At least one column is required')
@@ -130,12 +164,20 @@ class Profiling(pd.DataFrame):
 			return
 
 	def to_datetime(self, col: str):
+		"""
+		to convert column into datetime
+		"""
+
 		try:
 			self[col] = self[col].map(lambda d: datetime.strptime(d, '%d/%m/%Y') if not isinstance(d, pd._libs.tslibs.timestamps.Timestamp) else d)
 		except TypeError as e:
 			print(col, "isn't a string column or doesn't contain date")
 
 	def plot(self, x: str, y: list, kind='line', figsize=(10, 5)) -> matplotlib.axes._subplots:
+		"""
+		Overriden plot method of dataframe from pandas
+		"""
+
 		s_d = self.v_type(self[[x]])
 
 		if (s_d[x]['type']).value == 'CAT' or (s_d[x]['type']).value == 'NUM':
@@ -144,11 +186,19 @@ class Profiling(pd.DataFrame):
 		return super().plot(x, y, kind=kind, figsize=figsize)
 
 	def v_type(self, df) -> dict:
+		"""
+		Finding the variable type
+		"""
+
 		a = [(c, s) for c, s in df.iteritems()]
 		s_d = {c: s for c, s in itertools.starmap(md, a)}
 		return s_d
 
-	def profile(self, subset=0, cols=[], title='Report', pool_size=0, minify_html=False, output=None) -> pp.__init__.ProfileReport:
+	def profile(self, subset=0, cols=[], title='Report', pool_size=0, minify_html=False, output=None):
+		"""
+		Priting the profile of a dataframe
+		"""
+
 		df = self
 		report = None
 
@@ -166,6 +216,10 @@ class Profiling(pd.DataFrame):
 		return report
 
 	def correlation(self, subset=[], method='pearson'):
+		"""
+		Finding correlation between variables
+		"""
+
 		if len(subset) == 0:
 			return self.corr(method=method)
 

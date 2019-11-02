@@ -5,6 +5,10 @@ from sys import platform
 import os
 
 def arguments(arg: list = []):
+	"""
+	List of options that could be passed through console
+	"""
+
 	parser = argparse.ArgumentParser(description='Bespoke profiler')
 
 	parser.add_argument(

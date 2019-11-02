@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Profiling &#8212; DataProfiler 0.01 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to DataProfiler’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="profiling">
+<h1>Profiling<a class="headerlink" href="#profiling" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="profiling.Profiling">
+<em class="property">class </em><code class="sig-prename descclassname">profiling.</code><code class="sig-name descname">Profiling</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">subset=20</em>, <em class="sig-param">show_report=False</em>, <em class="sig-param">file_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>To initialize Profiling class, data or file_path is mandatory</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">data</dt>
+<dd class="field-odd"><p>accepts a pandas dataframe or Profiling object</p>
+</dd>
+<dt class="field-even">subset</dt>
+<dd class="field-even"><p>number of rows to consider when showing report</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="profiling.Profiling.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">cols</em>, <em class="sig-param">use_pandas=False</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>To compute details about a column in a dataframe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.correlation">
+<code class="sig-name descname">correlation</code><span class="sig-paren">(</span><em class="sig-param">subset=[]</em>, <em class="sig-param">method='pearson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finding correlation between variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.details">
+<code class="sig-name descname">details</code><span class="sig-paren">(</span><em class="sig-param">cols=[]</em>, <em class="sig-param">use_pandas=False</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.details" title="Permalink to this definition">¶</a></dt>
+<dd><p>To get the details of a dataframe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.head">
+<code class="sig-name descname">head</code><span class="sig-paren">(</span><em class="sig-param">rows: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.head"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>this is head method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">x: str</em>, <em class="sig-param">y: list</em>, <em class="sig-param">kind='line'</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">5)</em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._subplots<a class="reference internal" href="_modules/profiling.html#Profiling.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overriden plot method of dataframe from pandas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.plot_timeseries">
+<code class="sig-name descname">plot_timeseries</code><span class="sig-paren">(</span><em class="sig-param">date_col: str</em>, <em class="sig-param">cols=[]</em>, <em class="sig-param">plot_on='date'</em>, <em class="sig-param">figsize=(10</em>, <em class="sig-param">5)</em>, <em class="sig-param">kind='line'</em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._subplots<a class="reference internal" href="_modules/profiling.html#Profiling.plot_timeseries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.plot_timeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>To plot time series data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.profile">
+<code class="sig-name descname">profile</code><span class="sig-paren">(</span><em class="sig-param">subset=0</em>, <em class="sig-param">cols=[]</em>, <em class="sig-param">title='Report'</em>, <em class="sig-param">pool_size=0</em>, <em class="sig-param">minify_html=False</em>, <em class="sig-param">output=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Priting the profile of a dataframe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.psubset">
+<code class="sig-name descname">psubset</code><span class="sig-paren">(</span><em class="sig-param">cols=[]</em>, <em class="sig-param">rows=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.psubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.psubset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is subset of a data frame</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.read_csv">
+<code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is read_csv</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.tail">
+<code class="sig-name descname">tail</code><span class="sig-paren">(</span><em class="sig-param">rows: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>this is tail</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.to_datetime">
+<code class="sig-name descname">to_datetime</code><span class="sig-paren">(</span><em class="sig-param">col: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profiling.html#Profiling.to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.to_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>to convert column into datetime</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="profiling.Profiling.v_type">
+<code class="sig-name descname">v_type</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/profiling.html#Profiling.v_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiling.Profiling.v_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finding the variable type</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-main">
+<span id="main"></span><h1>Main<a class="headerlink" href="#module-main" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="main.arguments">
+<code class="sig-prename descclassname">main.</code><code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">arg: list = []</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of options that could be passed through console</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DataProfiler</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-main">Main</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to DataProfiler’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Hemanshu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/profiling.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
